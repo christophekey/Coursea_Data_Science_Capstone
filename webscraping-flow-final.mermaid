@@ -1,0 +1,47 @@
+flowchart LR
+    subgraph Task1[Task 1: Data Retrieval]
+        A[Start] --> B[HTTP GET Request]
+        B --> |HTML Response| C[Create BeautifulSoup Object]
+        C --> |Soup Object| D[Find All HTML Tables]
+    end
+
+    subgraph Task2[Task 2: Column Extraction]
+        D --> |List of Tables| E[Select Third Table]
+        E --> F[Extract Column Names]
+        F --> |Column Names List| G[Create Empty Dictionary]
+    end
+
+    Task1 --> Task2
+
+    subgraph Task3[Task 3: Data Processing]
+        direction RL
+        G --> H[Initialize Empty Lists]
+        H --> I[Parse Launch Tables]
+        I --> J{Process Each Table}
+        J --> K{Process Each Row}
+        K --> L{Is Flight Number?}
+        
+        L --> |Yes| M[Extract Fields]
+        M --> |Flight No.| N1[Store Flight No.]
+        M --> |Date & Time| N2[Store Date/Time]
+        M --> |Version| N3[Store Booster Ver.]
+        M --> |Site| N4[Store Launch Site]
+        M --> |Mass| N5[Store Payload Mass]
+        M --> |Details| N6[Store Other Details]
+        
+        N1 & N2 & N3 & N4 & N5 & N6 --> O[Update Dictionary]
+        
+        L --> |No| K
+        K --> |Next Row| K
+        J --> |Next Table| J
+    end
+
+    Task2 --> Task3
+
+    subgraph Output[Final Output]
+        O --> P[Create DataFrame]
+        P --> |DataFrame| Q[Export to CSV]
+        Q --> |spacex_web_scraped.csv| R[End]
+    end
+
+    Task3 --> Output
